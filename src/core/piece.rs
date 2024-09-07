@@ -1,12 +1,14 @@
 use std::fmt;
 
 #[derive(Clone, Copy)]
+/// Used to store a chess piece and its data
 pub struct Piece {
     p_type: Type,
     p_side: Side,
 }
 
 #[derive(Clone, Copy)]
+/// Type of a chess piece
 pub enum Type {
     King,
     Queen,
@@ -17,12 +19,14 @@ pub enum Type {
 }
 
 #[derive(Clone, Copy)]
+/// Side the chess piece is on
 pub enum Side {
     White,
     Black,
 }
 
 impl Piece {
+    /// Construct a piece from a given side and type
     pub fn new(p_type: Type, p_side: Side) -> Self {
         Self { p_type, p_side }
     }

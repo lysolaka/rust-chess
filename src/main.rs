@@ -3,7 +3,7 @@
 #[cfg(all(feature = "unicode", feature = "ascii"))]
 compile_error!("feature \"unicode\" and feature \"ascii\" cannot be enabled at the same time");
 
-mod core;
+pub mod core;
 
 use crate::core::board::Board;
 

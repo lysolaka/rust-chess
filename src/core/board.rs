@@ -4,12 +4,17 @@ use super::piece;
 use super::piece::Piece;
 use super::position::Pos;
 
+/// Wraps a chess board implemented as an array of size 64.
+/// Each field is an option:
+/// - Some means the field has a piece
+/// - None means the field is empty
 pub struct Board {
     fields: Box<[Option<Piece>; 64]>,
     current_move: piece::Side,
 }
 
 impl Board {
+    /// Construct a `Board` instance and puts all the pieces in the starting positions.
     pub fn new() -> Self {
         let mut fields = Box::new([None; 64]);
 
@@ -60,10 +65,43 @@ impl Board {
         }
     }
 
+    /// Returns an optional at a specified position (`pos`).
+    /// There is `Some(&Piece)` or `None` (specified position is empty)
     pub fn at(&self, pos: Pos) -> Option<&Piece> {
         self.fields[usize::from(pos)].as_ref()
     }
 
+    /// Returns an optional at a specified position (`pos`).
+    /// There is `Some(&mut Piece)` or `None` (specified position is empty).
+    /// This method is private and can be used instead of direct indexing
+    /// of the `fields` array.
+    fn at_mut(&mut self, pos: Pos) -> Option<&mut Piece> {
+        self.fields[usize::from(pos)].as_mut()
+    }
+
+    /// Prints the state of the board in a visually pleasing format
+    ///
+    /// # Example - board at its starting position
+    /// ```text
+    /// +---+---+---+---+---+---+---+---+
+    /// | ♜ | ♞ | ♝ | ♛ | ♚ | ♝ | ♞ | ♜ | 8
+    /// +---+---+---+---+---+---+---+---+
+    /// | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | 7
+    /// +---+---+---+---+---+---+---+---+
+    /// |   |   |   |   |   |   |   |   | 6
+    /// +---+---+---+---+---+---+---+---+
+    /// |   |   |   |   |   |   |   |   | 5
+    /// +---+---+---+---+---+---+---+---+
+    /// |   |   |   |   |   |   |   |   | 4
+    /// +---+---+---+---+---+---+---+---+
+    /// |   |   |   |   |   |   |   |   | 3
+    /// +---+---+---+---+---+---+---+---+
+    /// | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | 2
+    /// +---+---+---+---+---+---+---+---+
+    /// | ♜ | ♞ | ♝ | ♛ | ♚ | ♝ | ♞ | ♜ | 1
+    /// +---+---+---+---+---+---+---+---+
+    ///   a   b   c   d   e   f   g   h
+    /// ```
     pub fn print(&self) {
         for row in (1..=8).rev() {
             println!("+---+---+---+---+---+---+---+---+");
