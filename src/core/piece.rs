@@ -7,7 +7,7 @@ pub struct Piece {
     p_side: Side,
 }
 
-#[derive(Clone, Copy)]
+#[derive(PartialEq, Clone, Copy)]
 /// Type of a chess piece.
 /// Pawns also hold a boolean indicating whether it was moved.
 pub enum Type {
@@ -36,6 +36,14 @@ impl Piece {
     }
     pub fn p_side(&self) -> Side {
         self.p_side
+    }
+
+    /// Marks a pawn as moved by changing its internal boolean to true.
+    /// If `self.p_type` is not a pawn this method does nothing.
+    pub fn mark_moved(&mut self) {
+        if self.p_type == Type::Pawn(false) {
+            self.p_type = Type::Pawn(true);
+        }
     }
 }
 

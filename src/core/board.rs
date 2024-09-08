@@ -1,3 +1,5 @@
+use std::usize;
+
 use super::piece;
 use super::piece::Piece;
 use super::position::Pos;
@@ -125,11 +127,35 @@ impl Board {
     }
 
     /// Performs a piece movement by first calling `possible_moves(start_pos)` and checking if
-    /// `end_pos` is a valid movement. If it isn't an explanatory `Err` is returned, else
+    /// `end_pos` is a valid movement. If it isn't, an explanatory `Err` is returned, else
     /// the movement is performed and `Ok` is returned.
     pub fn move_piece(&mut self, start_pos: Pos, end_pos: Pos) -> Result<(), &'static str> {
-        todo!();
-        Ok(())
+        if let Some(p) = self.at(start_pos) {
+            if p.p_side() != self.current_move {
+                return Err("Wrong piece was selected.");
+            }
+        } else {
+            return Err("An empty field was selected.");
+        }
+
+        let moves = self.possible_moves(start_pos);
+        if moves.contains(&end_pos) {
+            self.fields[usize::from(end_pos)] = self.fields[usize::from(start_pos)];
+            self.fields[usize::from(start_pos)] = None;
+
+            if let Some(p) = self.at_mut(end_pos) {
+                p.mark_moved();
+            }
+
+            self.current_move = if self.current_move == piece::Side::White {
+                piece::Side::Black
+            } else {
+                piece::Side::White
+            };
+            return Ok(());
+        } else {
+            return Err("Specified move is impossible.");
+        }
     }
     /// Returns possible positions for a piece at `pos` as a vector.
     /// The vector is empty if an empty field was selected or when the specified piece
