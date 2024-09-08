@@ -16,7 +16,7 @@ impl Pos {
     /// ```
     /// Pos::new(column, row).get()
     /// ```
-    /// 
+    ///
     /// If the column is not in range from 'a' to 'h' (inclusive)
     /// or the row is not in range from 1 to 8 (inclusive)
     /// the behaviour is undefined
@@ -24,9 +24,9 @@ impl Pos {
     /// # Example
     ///
     /// ```
-    /// let p1 = Pos::new('d', 4);
+    /// let p = Pos::new('d', 4);
     ///
-    /// assert_eq!(p1.get(), Pos::at('d', 4));
+    /// assert_eq!(p.get(), Pos::at('d', 4));
     /// ```
     pub fn at(column: char, row: u8) -> usize {
         (column as u8 - 'a' as u8 + (row - 1) * 8).into()
@@ -35,6 +35,25 @@ impl Pos {
     /// If the position is ill-formed this method might or might not panic.
     pub fn get(&self) -> usize {
         (self.column as u8 - 'a' as u8 + (self.row - 1) * 8).into()
+    }
+    /// Returns true if the position is a valid position in context of a standard chess board.
+    /// If the position is ill-formed this method might return false, but it is not guaranteed
+    /// for all situations.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// let p = Pos::new('z', 5);
+    /// assert_eq(p.is_valid(), false);
+    ///
+    /// let p = Pos::new('a', 48);
+    /// assert_eq(p.is_valid(), false);
+    ///
+    /// let p = Pos::new('ó', 1); // ill-formed
+    /// //assert_eq(p.is_valid(), false) // not guaranteed
+    /// ```
+    pub fn is_valid(&self) -> bool {
+        self.column >= 'a' && self.column <= 'h' && self.row >= 1 && self.row <= 8
     }
 }
 

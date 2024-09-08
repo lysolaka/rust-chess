@@ -1,5 +1,3 @@
-use std::usize;
-
 use super::piece;
 use super::piece::Piece;
 use super::position::Pos;
@@ -29,7 +27,7 @@ impl Board {
             };
 
             for column in 'a'..='h' {
-                fields[Pos::at(column, row)] = Some(Piece::new(piece::Type::Pawn, side));
+                fields[Pos::at(column, row)] = Some(Piece::new(piece::Type::Pawn(false), side));
             }
         };
 
@@ -124,5 +122,325 @@ impl Board {
         for column in 'a'..='h' {
             print!("  {} ", column);
         }
+    }
+
+    /// Performs a piece movement by first calling `possible_moves(start_pos)` and checking if
+    /// `end_pos` is a valid movement. If it isn't an explanatory `Err` is returned, else
+    /// the movement is performed and `Ok` is returned.
+    pub fn move_piece(&mut self, start_pos: Pos, end_pos: Pos) -> Result<(), &'static str> {
+        todo!();
+        Ok(())
+    }
+    /// Returns possible positions for a piece at `pos` as a vector.
+    /// The vector is empty if an empty field was selected or when the specified piece
+    /// has no possible moves.
+    fn possible_moves(&self, pos: Pos) -> Vec<Pos> {
+        let mut moves: Vec<Pos> = Vec::new();
+        let selected = self.at(pos);
+
+        if let Some(p) = selected {
+            match p.p_type() {
+                piece::Type::King => {
+                    let c1: char = (pos.column as u8 - 1).into();
+                    let c2: char = (pos.column as u8 + 1).into();
+                    for c in c1..=c2 {
+                        for r in pos.row - 1..=pos.row + 1 {
+                            let cur = Pos::new(c, r);
+                            if cur != pos && cur.is_valid() {
+                                match self.at(cur) {
+                                    Some(p) => {
+                                        if p.p_side() != self.current_move {
+                                            moves.push(cur);
+                                        }
+                                    }
+                                    None => moves.push(cur),
+                                }
+                            }
+                        }
+                    }
+                }
+                piece::Type::Queen => {
+                    // Rook code
+                    for r in pos.row..=8 {
+                        let cur = Pos::new(pos.column, r);
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                            break;
+                        } else {
+                            moves.push(cur);
+                        }
+                    }
+                    for r in (1..=pos.row).rev() {
+                        let cur = Pos::new(pos.column, r);
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                            break;
+                        } else {
+                            moves.push(cur);
+                        }
+                    }
+                    for c in pos.column..='h' {
+                        let cur = Pos::new(c, pos.row);
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                            break;
+                        } else {
+                            moves.push(cur);
+                        }
+                    }
+                    for c in ('a'..=pos.column).rev() {
+                        let cur = Pos::new(c, pos.row);
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                            break;
+                        } else {
+                            moves.push(cur);
+                        }
+                    }
+                    // Bishop code
+                    for i in 1.. {
+                        let cur = Pos::new((pos.column as u8 + i).into(), pos.row + i);
+                        if !cur.is_valid() {
+                            break;
+                        }
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                            break;
+                        } else {
+                            moves.push(cur);
+                        }
+                    }
+                    for i in 1.. {
+                        let cur = Pos::new((pos.column as u8 + i).into(), pos.row - i);
+                        if !cur.is_valid() {
+                            break;
+                        }
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                            break;
+                        } else {
+                            moves.push(cur);
+                        }
+                    }
+                    for i in 1.. {
+                        let cur = Pos::new((pos.column as u8 - i).into(), pos.row - i);
+                        if !cur.is_valid() {
+                            break;
+                        }
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                            break;
+                        } else {
+                            moves.push(cur);
+                        }
+                    }
+                    for i in 1.. {
+                        let cur = Pos::new((pos.column as u8 - i).into(), pos.row + i);
+                        if !cur.is_valid() {
+                            break;
+                        }
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                            break;
+                        } else {
+                            moves.push(cur);
+                        }
+                    }
+                }
+                piece::Type::Rook => {
+                    for r in pos.row..=8 {
+                        let cur = Pos::new(pos.column, r);
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                            break;
+                        } else {
+                            moves.push(cur);
+                        }
+                    }
+                    for r in (1..=pos.row).rev() {
+                        let cur = Pos::new(pos.column, r);
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                            break;
+                        } else {
+                            moves.push(cur);
+                        }
+                    }
+                    for c in pos.column..='h' {
+                        let cur = Pos::new(c, pos.row);
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                            break;
+                        } else {
+                            moves.push(cur);
+                        }
+                    }
+                    for c in ('a'..=pos.column).rev() {
+                        let cur = Pos::new(c, pos.row);
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                            break;
+                        } else {
+                            moves.push(cur);
+                        }
+                    }
+                }
+                piece::Type::Bishop => {
+                    for i in 1.. {
+                        let cur = Pos::new((pos.column as u8 + i).into(), pos.row + i);
+                        if !cur.is_valid() {
+                            break;
+                        }
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                            break;
+                        } else {
+                            moves.push(cur);
+                        }
+                    }
+                    for i in 1.. {
+                        let cur = Pos::new((pos.column as u8 + i).into(), pos.row - i);
+                        if !cur.is_valid() {
+                            break;
+                        }
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                            break;
+                        } else {
+                            moves.push(cur);
+                        }
+                    }
+                    for i in 1.. {
+                        let cur = Pos::new((pos.column as u8 - i).into(), pos.row - i);
+                        if !cur.is_valid() {
+                            break;
+                        }
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                            break;
+                        } else {
+                            moves.push(cur);
+                        }
+                    }
+                    for i in 1.. {
+                        let cur = Pos::new((pos.column as u8 - i).into(), pos.row + i);
+                        if !cur.is_valid() {
+                            break;
+                        }
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                            break;
+                        } else {
+                            moves.push(cur);
+                        }
+                    }
+                }
+                piece::Type::Knight => {
+                    let p = [
+                        Pos::new((pos.column as u8 + 1).into(), pos.row + 2),
+                        Pos::new((pos.column as u8 + 2).into(), pos.row + 1),
+                        Pos::new((pos.column as u8 + 2).into(), pos.row - 1),
+                        Pos::new((pos.column as u8 + 1).into(), pos.row - 2),
+                        Pos::new((pos.column as u8 - 1).into(), pos.row + 2),
+                        Pos::new((pos.column as u8 - 2).into(), pos.row + 1),
+                        Pos::new((pos.column as u8 - 2).into(), pos.row - 1),
+                        Pos::new((pos.column as u8 - 1).into(), pos.row - 2),
+                    ];
+
+                    for cur in p {
+                        if cur.is_valid() {
+                            if let Some(p) = self.at(cur) {
+                                if p.p_side() != self.current_move {
+                                    moves.push(cur);
+                                }
+                            } else {
+                                moves.push(cur);
+                            }
+                        }
+                    }
+                }
+                piece::Type::Pawn(has_moved) => {
+                    let cur_relative = |c: u8, r: u8, subtract: bool| {
+                        let mut cur = match self.current_move {
+                            piece::Side::White => Pos::new(pos.column, pos.row + r),
+                            piece::Side::Black => Pos::new(pos.column, pos.row - r),
+                        };
+                        cur.column = if subtract {
+                            (cur.column as u8 - c).into()
+                        } else {
+                            (cur.column as u8 + c).into()
+                        };
+                        cur
+                    };
+
+                    let cur = cur_relative(0, 1, false);
+                    if cur.is_valid() {
+                        if let None = self.at(cur) {
+                            moves.push(cur);
+                        }
+                    }
+                    let cur = cur_relative(1, 1, true);
+                    if cur.is_valid() {
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                        }
+                    }
+                    let cur = cur_relative(1, 1, false);
+                    if cur.is_valid() {
+                        if let Some(p) = self.at(cur) {
+                            if p.p_side() != self.current_move {
+                                moves.push(cur);
+                            }
+                        }
+                    }
+                    if !has_moved {
+                        let cur = cur_relative(0, 2, false);
+                        if cur.is_valid() {
+                            if let None = self.at(cur) {
+                                moves.push(cur);
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            return vec![];
+        }
+
+        moves
     }
 }

@@ -8,17 +8,18 @@ pub struct Piece {
 }
 
 #[derive(Clone, Copy)]
-/// Type of a chess piece
+/// Type of a chess piece.
+/// Pawns also hold a boolean indicating whether it was moved.
 pub enum Type {
     King,
     Queen,
     Rook,
     Bishop,
     Knight,
-    Pawn,
+    Pawn(bool),
 }
 
-#[derive(Clone, Copy)]
+#[derive(PartialEq, Clone, Copy)]
 /// Side the chess piece is on
 pub enum Side {
     White,
@@ -60,7 +61,7 @@ impl fmt::Display for Type {
             Type::Rook => '♜',
             Type::Bishop => '♝',
             Type::Knight => '♞',
-            Type::Pawn => '♟',
+            Type::Pawn(_) => '♟',
         };
         write!(f, "{c}")
     }
