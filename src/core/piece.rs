@@ -26,6 +26,15 @@ pub enum Side {
     Black,
 }
 
+impl fmt::Display for Side {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Side::White => write!(f, "White"),
+            Side::Black => write!(f, "Black"),
+        }
+    }
+}
+
 impl Piece {
     /// Construct a piece from a given side and type
     pub fn new(p_type: Type, p_side: Side) -> Self {

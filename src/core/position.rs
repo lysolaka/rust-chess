@@ -13,7 +13,7 @@ impl Pos {
         Self { column, row }
     }
     /// Associated function of position (`Pos`) equivalent to
-    /// ```
+    /// ```text
     /// Pos::new(column, row).get()
     /// ```
     ///
@@ -24,6 +24,8 @@ impl Pos {
     /// # Example
     ///
     /// ```
+    /// use rust_chess::core::position::Pos;
+    ///
     /// let p = Pos::new('d', 4);
     ///
     /// assert_eq!(p.get(), Pos::at('d', 4));
@@ -43,14 +45,16 @@ impl Pos {
     /// # Example
     ///
     /// ```
+    /// use rust_chess::core::position::Pos;
+    ///
     /// let p = Pos::new('z', 5);
-    /// assert_eq(p.is_valid(), false);
+    /// assert_eq!(p.is_valid(), false);
     ///
     /// let p = Pos::new('a', 48);
-    /// assert_eq(p.is_valid(), false);
+    /// assert_eq!(p.is_valid(), false);
     ///
     /// let p = Pos::new('ó', 1); // ill-formed
-    /// //assert_eq(p.is_valid(), false) // not guaranteed
+    /// assert_eq!(p.is_valid(), false) // not guaranteed
     /// ```
     pub fn is_valid(&self) -> bool {
         self.column >= 'a' && self.column <= 'h' && self.row >= 1 && self.row <= 8

@@ -1,7 +1,7 @@
 use std::usize;
 
-use super::piece;
 use super::piece::Piece;
+use super::piece;
 use super::position::Pos;
 
 /// Wraps a chess board implemented as an array of size 64.
@@ -63,6 +63,11 @@ impl Board {
             fields,
             current_move: piece::Side::White,
         }
+    }
+
+    /// Returns the side which should make the next move. (`current_move` field)
+    pub fn current_move(&self) -> piece::Side {
+        self.current_move
     }
 
     /// Returns an optional at a specified position (`pos`).
