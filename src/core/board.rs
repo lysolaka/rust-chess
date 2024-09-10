@@ -1,7 +1,7 @@
 use std::usize;
 
-use super::piece::Piece;
 use super::piece;
+use super::piece::Piece;
 use super::position::Pos;
 
 /// Wraps a chess board implemented as an array of size 64.

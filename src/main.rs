@@ -2,9 +2,9 @@
 compile_error!("feature \"unicode\" and feature \"ascii\" cannot be enabled at the same time");
 
 use rust_chess::core::board::Board;
+use rust_chess::ui::display;
 
 fn main() {
-    let b = Board::new();
-    b.print();
-    print!("\n");
+    let mut b = Box::new(Board::new());
+    display::game_loop(&mut b);
 }
