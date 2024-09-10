@@ -167,9 +167,8 @@ impl Board {
     /// has no possible moves.
     fn possible_moves(&self, pos: Pos) -> Vec<Pos> {
         let mut moves: Vec<Pos> = Vec::new();
-        let selected = self.at(pos);
 
-        if let Some(p) = selected {
+        if let Some(p) = self.at(pos) {
             match p.p_type() {
                 piece::Type::King => {
                     let c1: char = (pos.column as u8 - 1).into();
@@ -192,7 +191,7 @@ impl Board {
                 }
                 piece::Type::Queen => {
                     // Rook code
-                    for r in pos.row..=8 {
+                    for r in pos.row + 1..=8 {
                         let cur = Pos::new(pos.column, r);
                         if let Some(p) = self.at(cur) {
                             if p.p_side() != self.current_move {
@@ -203,7 +202,7 @@ impl Board {
                             moves.push(cur);
                         }
                     }
-                    for r in (1..=pos.row).rev() {
+                    for r in (1..pos.row).rev() {
                         let cur = Pos::new(pos.column, r);
                         if let Some(p) = self.at(cur) {
                             if p.p_side() != self.current_move {
@@ -214,7 +213,7 @@ impl Board {
                             moves.push(cur);
                         }
                     }
-                    for c in pos.column..='h' {
+                    for c in (pos.column as u8 + 1).into()..='h' {
                         let cur = Pos::new(c, pos.row);
                         if let Some(p) = self.at(cur) {
                             if p.p_side() != self.current_move {
@@ -225,7 +224,7 @@ impl Board {
                             moves.push(cur);
                         }
                     }
-                    for c in ('a'..=pos.column).rev() {
+                    for c in ('a'..pos.column).rev() {
                         let cur = Pos::new(c, pos.row);
                         if let Some(p) = self.at(cur) {
                             if p.p_side() != self.current_move {
@@ -295,7 +294,7 @@ impl Board {
                     }
                 }
                 piece::Type::Rook => {
-                    for r in pos.row..=8 {
+                    for r in pos.row + 1..=8 {
                         let cur = Pos::new(pos.column, r);
                         if let Some(p) = self.at(cur) {
                             if p.p_side() != self.current_move {
@@ -306,7 +305,7 @@ impl Board {
                             moves.push(cur);
                         }
                     }
-                    for r in (1..=pos.row).rev() {
+                    for r in (1..pos.row).rev() {
                         let cur = Pos::new(pos.column, r);
                         if let Some(p) = self.at(cur) {
                             if p.p_side() != self.current_move {
@@ -317,7 +316,7 @@ impl Board {
                             moves.push(cur);
                         }
                     }
-                    for c in pos.column..='h' {
+                    for c in (pos.column as u8 + 1).into()..='h' {
                         let cur = Pos::new(c, pos.row);
                         if let Some(p) = self.at(cur) {
                             if p.p_side() != self.current_move {
@@ -328,7 +327,7 @@ impl Board {
                             moves.push(cur);
                         }
                     }
-                    for c in ('a'..=pos.column).rev() {
+                    for c in ('a'..pos.column).rev() {
                         let cur = Pos::new(c, pos.row);
                         if let Some(p) = self.at(cur) {
                             if p.p_side() != self.current_move {
@@ -471,7 +470,7 @@ impl Board {
         } else {
             return vec![];
         }
-
+        dbg!(&moves);
         moves
     }
 }
