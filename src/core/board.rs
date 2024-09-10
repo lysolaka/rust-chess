@@ -470,7 +470,7 @@ impl Board {
         } else {
             return vec![];
         }
-        dbg!(&moves);
+
         moves
     }
 }
